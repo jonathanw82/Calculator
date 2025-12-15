@@ -1,15 +1,48 @@
-
-import Keyboard from '../src/components/keyboard/keysboard.component';
-import Display from '../src/components/display/display.component';
-import './App.css';
-import { useState } from "react";
+import Keyboard from "../src/components/keyboard/keysboard.component";
+import Display from "../src/components/display/display.component";
+import "./App.css";
+import { useState, useEffect } from "react";
+import KeyboardRows from "./components/keyboard/keyboard.component.row.array";
 
 function App() {
   const [inputResult, setInputResult] = useState("");
   const [firstOperand, setFirstOperand] = useState(null);
   const [operator, setOperator] = useState(null);
-  const [dislayInput, setDislayInput] = useState('');
-  const [displayAnswer, setdisplayAnswer] = useState('');
+  const [dislayInput, setDislayInput] = useState("");
+  const [displayAnswer, setdisplayAnswer] = useState("");
+
+  function useExternalKeyBoardEvent(rows, handleClick) {
+    useEffect(() => {
+      const handleGlobalKeyDown = (event) => {
+        const keyPressed = event.key;
+
+        const AllKeysAsStrings = rows.flat().map((key) => key.toString());
+
+        if (AllKeysAsStrings.includes(keyPressed)) {
+          let convertKeyToInt = parseInt(event.key);
+          if (!Number.isNaN(convertKeyToInt) && isFinite(convertKeyToInt)) {
+            // It's a number (1, 2, 3...)
+            handleClick(convertKeyToInt);
+          } else {
+            // It's an operator, 'C', '.', or '='
+            handleClick(keyPressed);
+          }
+        } else if (keyPressed === "Enter") {
+          event.preventDefault();
+          handleClick("=");
+        } else if (keyPressed === "Backspace") {
+          event.preventDefault();
+          handleClick("Backspace");
+        }
+      };
+
+      window.addEventListener("keydown", handleGlobalKeyDown);
+
+      return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+    }, [rows, handleClick]);
+    return;
+  }
+  useExternalKeyBoardEvent(KeyboardRows, handleClick);
 
   const calculateResult = (secondOperand) => {
     let result = 0;
@@ -47,14 +80,17 @@ function App() {
     setOperator(null);
   };
 
-  const handleClick = (digit) => {
+  function handleClick(digit) {
+    if (digit === "C") {
+      resetCalculator();
+      return;
+    }
     const isDigit = typeof digit === "number";
     setDislayInput(dislayInput + digit);
 
     if (isDigit) {
       setInputResult(inputResult + digit);
     } else {
-      if(digit === 'C') resetCalculator();
       const currentNumber = parseFloat(inputResult);
       if (firstOperand === null) {
         setFirstOperand(currentNumber);
@@ -67,26 +103,32 @@ function App() {
         setOperator(digit);
       }
     }
-  };
+
+    if (digit === "Backspace") {
+      setInputResult(inputResult.slice(0, -1));
+      setDislayInput(dislayInput.slice(0, -1));
+      return;
+    }
+  }
 
   function resetCalculator() {
     setInputResult("");
     setFirstOperand(null);
     setOperator(null);
-    setDislayInput('');
-    setdisplayAnswer('0')
+    setDislayInput("");
+    setdisplayAnswer("0");
   }
 
   return (
     <>
-    <h1>Calculator</h1>
-    <div className='container'>
-    <div className='reactio'>REACTIO</div>
-      <Display result={displayAnswer || '0'} value={dislayInput || '0'}/>
-      <Keyboard handleClick={handleClick}/>
-    </div>
+      <h1>Calculator</h1>
+      <div className="container">
+        <div className="reactio">REACTIO</div>
+        <Display result={displayAnswer || "0"} value={dislayInput || "0"} />
+        <Keyboard handleClick={handleClick} />
+      </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
