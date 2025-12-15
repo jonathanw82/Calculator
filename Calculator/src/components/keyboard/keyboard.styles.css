@@ -1,4 +1,7 @@
 .key-row{
-    margin: 30px 30px 30px;
     text-align: center;
+}
+
+.keyboard{
+    margin-top: 20px;
 }

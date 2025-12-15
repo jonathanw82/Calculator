@@ -1,0 +1,30 @@
+@font-face {
+    font-family: 'digital7';
+    src: url(../../fonts/digital-7.regular.ttf);
+}
+
+.display{
+    width: 320px;
+    height: 90px;
+    margin-top: 10px;
+    border: 2px, solid black;
+    background-color: #35F527;
+    color: black;
+    box-shadow: inset 0.3em 0.3em 0.3em 0 rgba(255,255,255,0.5), inset -0.2em -0.2em 0.2em 0 rgba(0,0,0,0.5);
+}
+
+.input-numbers{
+    padding-top: 7px;
+    margin-left: 20px;
+    font-size: 1.5rem;
+    font-family: digital7;
+}
+
+.answers{
+    margin-top: 10px;
+    text-align: right;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 2.8rem;
+    font-family: digital7;
+}
