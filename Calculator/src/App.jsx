@@ -47,7 +47,6 @@ function App() {
   const calculateResult = (secondOperand) => {
     let result = 0;
 
-    // Use a switch statement to handle different operations
     switch (operator) {
       case "+":
         result = firstOperand + secondOperand;
@@ -59,10 +58,9 @@ function App() {
         result = firstOperand * secondOperand;
         break;
       case "/":
-        // Add error handling for division by zero
         if (secondOperand === 0) {
           alert("Cannot divide by zero");
-          resetCalculator(); // Helper function to clear state
+          resetCalculator();
           return;
         }
         result = firstOperand / secondOperand;
@@ -85,7 +83,7 @@ function App() {
       resetCalculator();
       return;
     }
-    const isDigit = typeof digit === "number";
+    const isDigit = typeof digit === "number" || digit === '.';
     setDislayInput(dislayInput + digit);
 
     if (isDigit) {
